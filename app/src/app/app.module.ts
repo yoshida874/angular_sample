@@ -21,6 +21,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.
     MatDatepickerModule,
     // MatNativeDateModule,
     MatMomentDateModule,
+    MatDialogModule,
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},],
   bootstrap: [AppComponent]

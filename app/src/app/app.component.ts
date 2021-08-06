@@ -1,7 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatTableDataSource} from '@angular/material/table';
 import * as moment from 'moment';
+
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 
 
 const ELEMENT_DATA = [
@@ -22,6 +25,8 @@ export class AppComponent {
   birthDay = '';
   age = 0;
 
+  constructor(public dialog: MatDialog) {}
+
   pickerInput(){
     // 年齢を算出する
     this.age = moment().diff(this.birthDay, 'years');
@@ -38,10 +43,16 @@ export class AppComponent {
   }
 
   delete(index: number){
-    // 削除
-    this.elementData.splice(index, 1);
-    this.dataSource = new MatTableDataSource(this.elementData);
-    this.dataSource.paginator = this.paginator;
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(!result) return;
+      this.elementData.splice(index, 1);
+      this.dataSource = new MatTableDataSource(this.elementData);
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   @ViewChild(MatPaginator) paginator: any;
