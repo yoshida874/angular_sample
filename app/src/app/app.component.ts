@@ -1,14 +1,15 @@
 import {Component, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {MatTableDataSource} from '@angular/material/table';
+import { FormControl, FormGroup } from '@angular/forms';
 import * as moment from 'moment';
 
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 
 
 const ELEMENT_DATA = [
-  {name: 'Hydrogen', birthDay: '2019-02-01', age: '2歳'},
+  {name: 'Hydrogen', birthDay: '2019-02-01', age: '2'},
 ];
 
 @Component({
@@ -18,25 +19,37 @@ const ELEMENT_DATA = [
 })
 
 export class AppComponent {
+  @ViewChild(MatPaginator) paginator: any;
   displayedColumns = ['名前', '誕生日', '年齢', 'ボタン'];
   elementData = ELEMENT_DATA;
   dataSource = new MatTableDataSource(this.elementData);
-  name = 'name';
-  birthDay = '';
-  age = 0;
+  profileForm = new FormGroup({
+    name: new FormControl(''),
+    birthDay: new FormControl(''),
+    age: new FormControl(0),
+  })
 
   constructor(public dialog: MatDialog) {}
 
+  // viewの初期化時
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   pickerInput(){
     // 年齢を算出する
-    this.age = moment().diff(this.birthDay, 'years');
+    let formData = this.profileForm.value;
+    this.profileForm.patchValue({
+      age: moment().diff(formData.birthDay, 'years'), 
+    })
   }
 
   add(){
+    let formData = this.profileForm.value;
     // YYYY-MM-DD形式に変換する
-    const outputDay = moment(this.birthDay).format('YYYY-MM-DD');
-    const outputAge = `${this.age}歳`
-    this.elementData.push({name: this.name, birthDay: outputDay, age: outputAge});
+    formData.birthDay = moment(formData.birthDay).format('YYYY-MM-DD');
+    formData.age = `${formData.age}`;
+    this.elementData.push(formData);
     // テーブル更新
     this.dataSource = new MatTableDataSource(this.elementData);
     this.dataSource.paginator = this.paginator;
@@ -44,7 +57,7 @@ export class AppComponent {
 
   delete(index: number){
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      width: '250px',
+      width: '200px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -53,11 +66,5 @@ export class AppComponent {
       this.dataSource = new MatTableDataSource(this.elementData);
       this.dataSource.paginator = this.paginator;
     });
-  }
-
-  @ViewChild(MatPaginator) paginator: any;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 }

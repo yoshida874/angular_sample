@@ -6,24 +6,26 @@
 </mat-toolbar>
 
 <div>
-  <mat-form-field  appearance="fill">
-    <mat-label>名前</mat-label>
-    <input matInput [(ngModel)]="name">
-  </mat-form-field>
+  <Form [formGroup]="profileForm" (ngSubmit)="add()"> 
+    <mat-form-field  appearance="fill">
+      <mat-label>名前</mat-label>
+      <input matInput required formControlName="name">
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>生年月日</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="birthDay" (dateChange)="pickerInput()">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker startView="multi-year"></mat-datepicker>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>生年月日</mat-label>
+      <input matInput required [matDatepicker]="picker" formControlName="birthDay" (dateChange)="pickerInput()">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker startView="multi-year"></mat-datepicker>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>年齢</mat-label>
-    <input matInput [(ngModel)]="age">
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>年齢</mat-label>
+      <input matInput required type="number" formControlName="age">
+    </mat-form-field>
 
-  <button mat-raised-button color="primary" (click)="add()">登録</button>
+    <button mat-raised-button color="primary">登録</button>
+  </Form>
 </div>
 
 <div class="content">
@@ -41,7 +43,7 @@
 
     <ng-container matColumnDef="年齢">
       <th mat-header-cell *matHeaderCellDef> 年齢 </th>
-      <td mat-cell *matCellDef="let element"> {{element.age}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.age | age}} </td>
     </ng-container>
 
     <ng-container matColumnDef="ボタン">
