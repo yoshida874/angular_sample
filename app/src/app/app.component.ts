@@ -58,7 +58,7 @@ export class AppComponent {
     this.dataSource.paginator = this.paginator;
   }
 
-  delete(index: number){
+  dialogOpen(index: number){
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '200px',
     });
