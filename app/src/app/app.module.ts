@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -50,7 +51,7 @@ import { AgePipe } from './pipes/age.pipe';
     MatMomentDateModule,
     MatDialogModule,
   ],
-  providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},],
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'}, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -3,13 +3,14 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatDialog} from '@angular/material/dialog';
 import {MatTableDataSource} from '@angular/material/table';
 import { FormControl, FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
 
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 
 
 const ELEMENT_DATA = [
-  {name: 'Hydrogen', birthDay: '2019-02-01', age: '2'},
+  {name: 'Hydrogen', birthDay: '2019年02月01日', age: '2'},
 ];
 
 @Component({
@@ -29,7 +30,7 @@ export class AppComponent {
     age: new FormControl(0),
   })
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, public datepipe: DatePipe) {}
 
   // viewの初期化時
   ngAfterViewInit() {
@@ -47,7 +48,9 @@ export class AppComponent {
   add(){
     let formData = this.profileForm.value;
     // YYYY-MM-DD形式に変換する
-    formData.birthDay = moment(formData.birthDay).format('YYYY-MM-DD');
+    // formData.birthDay = moment(formData.birthDay).format('YYYY-MM-DD');
+    // datePipeで変換
+    formData.birthDay = this.datepipe.transform(formData.birthDay, 'yyyy年MM月dd日');
     formData.age = `${formData.age}`;
     this.elementData.push(formData);
     // テーブル更新
@@ -60,8 +63,10 @@ export class AppComponent {
       width: '200px',
     });
 
+    // dialogが閉じた時
     dialogRef.afterClosed().subscribe(result => {
       if(!result) return;
+      // 列の削除
       this.elementData.splice(index, 1);
       this.dataSource = new MatTableDataSource(this.elementData);
       this.dataSource.paginator = this.paginator;
